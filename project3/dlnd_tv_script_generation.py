@@ -319,43 +319,6 @@ DON'T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE
 tests.test_build_rnn(build_rnn)
 
 
-# In[255]:
-
-
-from tensorflow.contrib import rnn
-with tf.Graph().as_default():
-    test_input_data_shape = [128, 5]
-    test_input_data = tf.placeholder(tf.int32, test_input_data_shape)
-    test_rnn_size = 256
-    test_embed_dim = 300
-    test_rnn_layer_size = 2
-    test_vocab_size = 27
-    test_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(test_rnn_size) for _ in range(test_rnn_layer_size)])
-    embed=get_embed(test_input_data,test_vocab_size,test_embed_dim)
-    output,FinalState=build_rnn(test_cell,embed)
-    #print(output.shape[0])
-    output.shape.as_list()[1]
-    weights = tf.Variable(tf.truncated_normal((test_rnn_size, test_vocab_size), stddev=0.1))
-    bias = tf.Variable(tf.zeros(test_vocab_size))
-
-
-# In[256]:
-
-
-num=tf.Variable(0)
-splitarr=tf.split(output,num_or_size_splits=output.shape.as_list()[0],axis=0)
-
-
-# In[257]:
-
-
-outy=[]
-for nn in range(output.shape.as_list()[0]):
-    sp=tf.reshape(splitarr[nn],[output.shape.as_list()[1],output.shape.as_list()[2]])
-    out=tf.add(tf.matmul(sp,weights),bias)
-    outy.append(out)
-
-
 # ### Build the Neural Network
 # Apply the functions you implemented above to:
 # - Apply embedding to `input_data` using your `get_embed(input_data, vocab_size, embed_dim)` function.
@@ -370,7 +333,7 @@ for nn in range(output.shape.as_list()[0]):
 tf.shape(output)
 
 
-# In[259]:
+# In[319]:
 
 
 def build_nn(cell, rnn_size, input_data, vocab_size, embed_dim):
@@ -387,7 +350,7 @@ def build_nn(cell, rnn_size, input_data, vocab_size, embed_dim):
     
     output,FinalState=build_rnn(cell,embed)
     
-    Logits=tf.contrib.layers.fully_connected(output,vocab_size,activation_fn=tf.nn.relu,weights_initializer=tf.truncated_normal_initializer(stddev=0.1))
+    Logits=tf.contrib.layers.fully_connected(output,vocab_size,activation_fn=None,weights_initializer=tf.truncated_normal_initializer(stddev=0.1))
     
     '''
     
@@ -463,7 +426,7 @@ tests.test_build_nn(build_nn)
 # 
 # Notice that the last target value in the last batch is the first input value of the first batch. In this case, `1`. This is a common technique used when creating sequence batches, although it is rather unintuitive.
 
-# In[260]:
+# In[320]:
 
 
 def get_batches(int_text, batch_size, seq_length):
@@ -513,19 +476,19 @@ tests.test_get_batches(get_batches)
 # - Set `learning_rate` to the learning rate.
 # - Set `show_every_n_batches` to the number of batches the neural network should print progress.
 
-# In[270]:
+# In[324]:
 
 
 # Number of Epochs
-num_epochs = 3000
+num_epochs = 1500
 # Batch Size
-batch_size = 128
+batch_size = 256
 # RNN Size
 rnn_size = 256
 # Embedding Dimension Size
-embed_dim = 256
+embed_dim = 200
 # Sequence Length
-seq_length = 50
+seq_length = 150
 # Learning Rate
 learning_rate = 0.001
 # Show stats for every n number of batches
@@ -540,7 +503,7 @@ save_dir = './save'
 # ### Build the Graph
 # Build the graph using the neural network you implemented.
 
-# In[271]:
+# In[325]:
 
 
 """
@@ -577,7 +540,7 @@ with train_graph.as_default():
 # ## Train
 # Train the neural network on the preprocessed data.  If you have a hard time getting a good loss, check the [forums](https://discussions.udacity.com/) to see if anyone is having the same problem.
 
-# In[272]:
+# In[326]:
 
 
 """
@@ -616,7 +579,7 @@ with tf.Session(graph=train_graph) as sess:
 # ## Save Parameters
 # Save `seq_length` and `save_dir` for generating a new TV script.
 
-# In[273]:
+# In[327]:
 
 
 """
@@ -628,7 +591,7 @@ helper.save_params((seq_length, save_dir))
 
 # # Checkpoint
 
-# In[274]:
+# In[328]:
 
 
 """
@@ -653,7 +616,7 @@ seq_length, load_dir = helper.load_params()
 # 
 # Return the tensors in the following tuple `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)` 
 
-# In[280]:
+# In[329]:
 
 
 def get_tensors(loaded_graph):
@@ -680,7 +643,7 @@ tests.test_get_tensors(get_tensors)
 # ### Choose Word
 # Implement the `pick_word()` function to select the next word using `probabilities`.
 
-# In[285]:
+# In[330]:
 
 
 def pick_word(probabilities, int_to_vocab):
@@ -706,7 +669,7 @@ tests.test_pick_word(pick_word)
 # ## Generate TV Script
 # This will generate the TV script for you.  Set `gen_length` to the length of TV script you want to generate.
 
-# In[286]:
+# In[331]:
 
 
 gen_length = 200
