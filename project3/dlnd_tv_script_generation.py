@@ -476,19 +476,19 @@ tests.test_get_batches(get_batches)
 # - Set `learning_rate` to the learning rate.
 # - Set `show_every_n_batches` to the number of batches the neural network should print progress.
 
-# In[324]:
+# In[332]:
 
 
 # Number of Epochs
-num_epochs = 1500
+num_epochs = 2000
 # Batch Size
 batch_size = 256
 # RNN Size
 rnn_size = 256
 # Embedding Dimension Size
-embed_dim = 200
+embed_dim = 128
 # Sequence Length
-seq_length = 150
+seq_length = 20
 # Learning Rate
 learning_rate = 0.001
 # Show stats for every n number of batches
@@ -503,7 +503,7 @@ save_dir = './save'
 # ### Build the Graph
 # Build the graph using the neural network you implemented.
 
-# In[325]:
+# In[333]:
 
 
 """
@@ -540,7 +540,7 @@ with train_graph.as_default():
 # ## Train
 # Train the neural network on the preprocessed data.  If you have a hard time getting a good loss, check the [forums](https://discussions.udacity.com/) to see if anyone is having the same problem.
 
-# In[326]:
+# In[334]:
 
 
 """
@@ -579,7 +579,7 @@ with tf.Session(graph=train_graph) as sess:
 # ## Save Parameters
 # Save `seq_length` and `save_dir` for generating a new TV script.
 
-# In[327]:
+# In[335]:
 
 
 """
@@ -591,7 +591,7 @@ helper.save_params((seq_length, save_dir))
 
 # # Checkpoint
 
-# In[328]:
+# In[336]:
 
 
 """
@@ -616,7 +616,7 @@ seq_length, load_dir = helper.load_params()
 # 
 # Return the tensors in the following tuple `(InputTensor, InitialStateTensor, FinalStateTensor, ProbsTensor)` 
 
-# In[329]:
+# In[337]:
 
 
 def get_tensors(loaded_graph):
@@ -643,7 +643,7 @@ tests.test_get_tensors(get_tensors)
 # ### Choose Word
 # Implement the `pick_word()` function to select the next word using `probabilities`.
 
-# In[330]:
+# In[338]:
 
 
 def pick_word(probabilities, int_to_vocab):
@@ -669,7 +669,7 @@ tests.test_pick_word(pick_word)
 # ## Generate TV Script
 # This will generate the TV script for you.  Set `gen_length` to the length of TV script you want to generate.
 
-# In[331]:
+# In[339]:
 
 
 gen_length = 200
