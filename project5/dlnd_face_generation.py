@@ -183,7 +183,7 @@ tests.test_discriminator(discriminator, tf)
 # ### Generator
 # Implement `generator` to generate an image using `z`. This function should be able to reuse the variables in the neural network.  Use [`tf.variable_scope`](https://www.tensorflow.org/api_docs/python/tf/variable_scope) with a scope name of "generator" to allow the variables to be reused. The function should return the generated 28 x 28 x `out_channel_dim` images.
 
-# In[41]:
+# In[81]:
 
 
 def generator(z, out_channel_dim, is_train=True):
@@ -213,7 +213,7 @@ def generator(z, out_channel_dim, is_train=True):
         logits = tf.layers.conv2d_transpose(x2, out_channel_dim, 5, strides=2, padding='same')
         # 28x28x3    
         
-        out = tf.tanh(logits)
+        out = 0.5*tf.tanh(logits)
     
     return out
 
@@ -229,7 +229,7 @@ tests.test_generator(generator, tf)
 # - `discriminator(images, reuse=False)`
 # - `generator(z, out_channel_dim, is_train=True)`
 
-# In[42]:
+# In[82]:
 
 
 def model_loss(input_real, input_z, out_channel_dim):
@@ -266,7 +266,7 @@ tests.test_model_loss(model_loss)
 # ### Optimization
 # Implement `model_opt` to create the optimization operations for the GANs. Use [`tf.trainable_variables`](https://www.tensorflow.org/api_docs/python/tf/trainable_variables) to get all the trainable variables.  Filter the variables with names that are in the discriminator and generator scope names.  The function should return a tuple of (discriminator training operation, generator training operation).
 
-# In[43]:
+# In[83]:
 
 
 def model_opt(d_loss, g_loss, learning_rate, beta1):
@@ -301,7 +301,7 @@ tests.test_model_opt(model_opt, tf)
 # ### Show Output
 # Use this function to show the current output of the generator during training. It will help you determine how well the GANs is training.
 
-# In[44]:
+# In[84]:
 
 
 """
@@ -331,13 +331,6 @@ def show_generator_output(sess, n_images, input_z, out_channel_dim, image_mode):
     pyplot.show()
 
 
-# In[45]:
-
-
-mnist_dataset = helper.Dataset('mnist', glob(os.path.join(data_dir, 'mnist/*.jpg')))
-mnist_dataset.shape[3]
-
-
 # ### Train
 # Implement `train` to build and train the GANs.  Use the following functions you implemented:
 # - `model_inputs(image_width, image_height, image_channels, z_dim)`
@@ -346,7 +339,7 @@ mnist_dataset.shape[3]
 # 
 # Use the `show_generator_output` to show `generator` output while you train. Running `show_generator_output` for every batch will drastically increase training time and increase the size of the notebook.  It's recommended to print the `generator` output every 100 batches.
 
-# In[78]:
+# In[86]:
 
 
 def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, data_shape, data_image_mode):
@@ -409,7 +402,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
 # ### MNIST
 # Test your GANs architecture on MNIST.  After 2 epochs, the GANs should be able to generate images that look like handwritten digits.  Make sure the loss of the generator is lower than the loss of the discriminator or close to 0.
 
-# In[79]:
+# In[87]:
 
 
 batch_size = 128
@@ -432,7 +425,7 @@ with tf.Graph().as_default():
 # ### CelebA
 # Run your GANs on CelebA.  It will take around 20 minutes on the average GPU to run one epoch.  You can run the whole epoch or stop when it starts to generate realistic faces.
 
-# In[80]:
+# In[88]:
 
 
 batch_size = 128
